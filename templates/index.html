@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Content Moderation</title>
+
+<style>
+
+body{
+    margin:0;
+    padding:0;
+    height:100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background:#0a0a0a;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* glowing animated background */
+body::before{
+    content:"";
+    position:absolute;
+    width:600px;
+    height:600px;
+    background:radial-gradient(circle, rgba(0,200,255,0.25), transparent 70%);
+    filter:blur(120px);
+    animation: glow 6s infinite alternate;
+}
+
+@keyframes glow{
+    from{transform:translate(-150px,-120px);}
+    to{transform:translate(150px,120px);}
+}
+
+.container{
+    position:relative;
+    width:520px;
+    padding:40px;
+    border-radius:18px;
+    background:linear-gradient(145deg,#0f2027,#203a43,#2c5364);
+    box-shadow:0 0 25px rgba(0,200,255,0.4);
+    text-align:center;
+    color:white;
+    backdrop-filter: blur(10px);
+}
+
+h1{
+    margin-bottom:10px;
+    font-weight:600;
+    letter-spacing:1px;
+}
+
+
+.titlebox{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:8px;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    filter: drop-shadow(0 0 8px rgba(37, 188, 214, 0.39));
+}
+
+.titlebox h1{
+    margin:0;
+    font-weight:600;
+    letter-spacing:1px;
+}
+
+
+
+.subtitle{
+    color:#a0cbe8;
+    margin-bottom:25px;
+}
+
+/* textarea */
+textarea{
+    width:100%;
+    height:130px;
+    background:#0b0f14;
+    border:1px solid #1e90ff;
+    border-radius:12px;
+    padding:12px;
+    color:white;
+    font-size:15px;
+    outline:none;
+    resize:none;
+    transition:0.3s;
+}
+
+textarea:focus{
+    border:1px solid #00eaff;
+    box-shadow:0 0 12px #00eaff;
+}
+
+/* button */
+button{
+    margin-top:20px;
+    background:linear-gradient(90deg,#02c6d8,#0072ff);
+    color:white;
+    border:none;
+    padding:14px 28px;
+    font-size:16px;
+    border-radius:30px;
+    cursor:pointer;
+    letter-spacing:1px;
+    transition:0.3s;
+    box-shadow:0 0 12px rgba(0,234,255,0.6);
+}
+
+button:hover{
+    transform:scale(1.07);
+    box-shadow:0 0 25px rgba(0,234,255,1);
+}
+
+/* result box */
+.result{
+    margin-top:25px;
+    padding:16px;
+    border-radius:12px;
+    font-size:20px;
+    font-weight:bold;
+    animation:fade 0.6s ease;
+}
+
+.safe{
+    background:rgba(0,255,150,0.15);
+    color:#00ffa6;
+    border:1px solid #00ffa6;
+}
+
+.unsafe{
+    background:rgba(255,0,80,0.15);
+    color:#ff3b6b;
+    border:1px solid #ff3b6b;
+}
+
+@keyframes fade{
+    from{opacity:0; transform:translateY(10px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+.footer{
+    margin-top:18px;
+    font-size:12px;
+    color:#9fbfd6;
+}
+
+/* POPUP BACKGROUND */
+.popup{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+}
+
+/* POPUP BOX */
+.popup-box{
+    background:#0f2027;
+    padding:30px;
+    width:360px;
+    border-radius:18px;
+    text-align:center;
+    box-shadow:0 0 35px rgba(0,234,255,0.7);
+    animation:pop 0.4s ease;
+}
+
+@keyframes pop{
+    from{transform:scale(0.6); opacity:0;}
+    to{transform:scale(1); opacity:1;}
+}
+
+/* CLOSE BUTTON */
+.close-btn{
+    float:right;
+    font-size:28px;
+    cursor:pointer;
+    color:#aaa;
+}
+
+.close-btn:hover{
+    color:white;
+}
+
+/* ICON */
+.popup-icon{
+    font-size:50px;
+    margin-bottom:10px;
+}
+
+/* SAFE STYLE */
+.safe-popup{
+    color:#00ffa6;
+}
+
+/* UNSAFE STYLE */
+.unsafe-popup{
+    color:#ff3b6b;
+}
+
+/* OK BUTTON */
+.ok-btn{
+    margin-top:20px;
+    padding:10px 25px;
+    border:none;
+    border-radius:25px;
+    background:linear-gradient(90deg,#00eaff,#0072ff);
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.ok-btn:hover{
+    transform:scale(1.08);
+    box-shadow:0 0 18px #00eaff;
+}
+
+
+</style>
+</head>
+
+
+
+
+<body>
+
+<div class="container">
+
+    <div class="titlebox">
+    <div class="logo">
+        <!-- AI Shield Logo SVG -->
+        <svg viewBox="0 0 64 64" width="42" height="42">
+            <defs>
+                <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#00eaff"/>
+                    <stop offset="100%" stop-color="#0072ff"/>
+                </linearGradient>
+            </defs>
+
+            <!-- Shield -->
+            <path d="M32 4 L56 12 V28 C56 44 45 56 32 60 C19 56 8 44 8 28 V12 Z"
+                  fill="none"
+                  stroke="url(#grad)"
+                  stroke-width="3"/>
+
+            <!-- Brain circuit -->
+            <circle cx="32" cy="28" r="7" fill="none" stroke="url(#grad)" stroke-width="2"/>
+            <path d="M32 21 V16 M32 35 V40 M25 28 H20 M39 28 H44"
+                  stroke="url(#grad)" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+    </div>
+
+    <h1>AI Content Moderation</h1>
+</div>
+
+    <div class="subtitle">Analyze text & detect harmful content instantly</div>
+
+    <form action="/predict" method="post">
+        <textarea name="message" placeholder="Type message here..."></textarea>
+        <br>
+        <button type="submit">Analyze Message</button>
+    </form>
+
+    <!-- RESULT POPUP -->
+<div id="popup" class="popup">
+    <div class="popup-box">
+
+        <span class="close-btn" onclick="closePopup()">&times;</span>
+
+        <div id="popupIcon" class="popup-icon"></div>
+        <h2 id="popupTitle"></h2>
+        <p id="popupMsg"></p>
+
+        <button class="ok-btn" onclick="closePopup()">OK</button>
+
+    </div>
+</div>
+
+
+    <div class="footer">AI Moderation System </div>
+
+</div>
+
+<script>
+
+var result = "{{ prediction|default('') }}";
+
+if(result !== ""){
+    var popup = document.getElementById("popup");
+    var title = document.getElementById("popupTitle");
+    var msg = document.getElementById("popupMsg");
+    var icon = document.getElementById("popupIcon");
+
+    popup.style.display = "flex";
+
+    if(result === "Unsafe"){
+        title.innerHTML = "Harmful Content Detected";
+        title.className = "unsafe-popup";
+        icon.innerHTML = "⚠";
+        msg.innerHTML = "This message violates community guidelines.";
+    }else{
+        title.innerHTML = "Content is Safe";
+        title.className = "safe-popup";
+        icon.innerHTML = "✔";
+        msg.innerHTML = "This message is appropriate.";
+    }
+}
+
+function closePopup(){
+    document.getElementById("popup").style.display = "none";
+}
+
+</script>
+
+</body>
+</html>
