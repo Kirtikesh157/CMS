@@ -230,6 +230,52 @@ button:hover{
     box-shadow:0 0 18px #00eaff;
 }
 
+/* LOADER */
+.loader{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#000000e6;
+    backdrop-filter:blur(6px);
+    z-index:999;
+    justify-content:center;
+    align-items:center;
+}
+
+.scan-box{
+    width:300px;
+    height:180px;
+    border:2px solid #00eaff;
+    border-radius:12px;
+    position:relative;
+    text-align:center;
+    padding-top:140px;
+    color:#00eaff;
+    font-size:18px;
+    letter-spacing:1px;
+    box-shadow:0 0 25px #00eaff;
+}
+
+.scan-line{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:4px;
+    background:#00eaff;
+    box-shadow:0 0 15px #00eaff;
+    animation:scan 2s linear infinite;
+}
+
+@keyframes scan{
+    0%{top:0;}
+    100%{top:160px;}
+}
+
+
 
 </style>
 </head>
@@ -270,11 +316,21 @@ button:hover{
 
     <div class="subtitle">Analyze text & detect harmful content instantly</div>
 
-    <form action="/predict" method="post">
+    <form action="/predict" method="post" onsubmit="showLoader()">
+
         <textarea name="message" placeholder="Type message here..."></textarea>
         <br>
         <button type="submit">Analyze Message</button>
     </form>
+
+    <!-- LOADING SCREEN -->
+<div id="loader" class="loader">
+    <div class="scan-box">
+        <div class="scan-line"></div>
+        <p>Analyzing content with AI...</p>
+    </div>
+</div>
+
 
     <!-- RESULT POPUP -->
 <div id="popup" class="popup">
@@ -295,6 +351,15 @@ button:hover{
     <div class="footer">AI Moderation System </div>
 
 </div>
+
+<!-- JavaScript  for  Popup  -->
+
+<script>
+function showLoader(){
+    document.getElementById("loader").style.display="flex";
+}
+</script>
+
 
 <script>
 

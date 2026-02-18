@@ -11,6 +11,7 @@ vectorizer = pickle.load(open("vectorizer.pkl","rb"))
 # preprocessing (same as training!)
 def preprocess(text):
     text = text.lower()
+    
     text = re.sub(r'http\S+|www\S+', '', text)
     text = re.sub(r'@\w+', '', text)
     text = re.sub(r'#', '', text)
