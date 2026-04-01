@@ -5,6 +5,10 @@ import  numpy  as np
 
 app = Flask(__name__)
 
+
+
+
+
 # load model
 model = pickle.load(open("model.pkl","rb"))
 vectorizer = pickle.load(open("vectorizer.pkl","rb"))

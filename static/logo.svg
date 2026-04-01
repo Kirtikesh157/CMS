@@ -1,0 +1,25 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00eaff"/>
+      <stop offset="100%" stop-color="#0072ff"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Shield -->
+  <path d="M32 4 L56 12 V28 C56 44 45 56 32 60 C19 56 8 44 8 28 V12 Z"
+        fill="none"
+        stroke="url(#grad)"
+        stroke-width="3"/>
+
+  <!-- Brain -->
+  <circle cx="32" cy="28" r="7"
+          fill="none"
+          stroke="url(#grad)"
+          stroke-width="2"/>
+
+  <path d="M32 21 V16 M32 35 V40 M25 28 H20 M39 28 H44"
+        stroke="url(#grad)"
+        stroke-width="2"
+        stroke-linecap="round"/>
+</svg>
